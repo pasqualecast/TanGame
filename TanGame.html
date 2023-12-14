@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TanGame - Trova il cellulare</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #fdfdfd;
+            font-family: 'Poppins', sans-serif;
+            color: #333;
+        }
+
+        h1 {
+            margin-bottom: 10px;
+            color: #FF69B4;
+        }
+
+        p {
+            color: #777;
+        }
+
+        .game-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin: 20px;
+        }
+
+        .window {
+            width: 120px;
+            height: 180px;
+            background-color: #87CEEB; /* Colore predefinito della finestra */
+            margin: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .window:hover {
+            background-color: #FFD700; /* Colore durante l'hover della finestra */
+        }
+
+        /* Aggiunta del colore delle righe per la finestra vincente */
+        .winning-window {
+            background-image: linear-gradient(#FF0000, #FF0000 33.33%, #FFD700 33.33%, #FFD700 66.66%, #FF0000 66.66%);
+        }
+
+        #result {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+
+        #restartButton {
+            margin-top: 10px;
+            padding: 10px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        /* Media query per adattare il gioco su schermi più piccoli */
+        @media (max-width: 600px) {
+            .window {
+                width: 80px;
+                height: 120px;
+            }
+
+            #restartButton {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>TanGame</h1>
+    <p>Benvenuto a TanGame! Trova il cellulare per vincere. Clicca sulle finestre per scoprire dove si trova.</p>
+
+    <div class="game-container">
+        <div class="window" id="window1" onclick="checkWindow(1)"></div>
+        <div class="window" id="window2" onclick="checkWindow(2)"></div>
+        <div class="window" id="window3" onclick="checkWindow(3)"></div>
+        <div class="window" id="window4" onclick="checkWindow(4)"></div>
+        <div class="window" id="window5" onclick="checkWindow(5)"></div>
+    </div>
+    
+    <p id="result"></p>
+
+    <button id="restartButton" onclick="restartGame()">Prova di nuovo</button>
+
+    <script>
+        let windowWithPhone; // La finestra con il cellulare sarà assegnata dinamicamente all'inizio di ogni partita
+
+        function initializeGame() {
+            // Resetta il gioco
+            windowWithPhone = Math.floor(Math.random() * 5) + 1;
+            document.querySelectorAll('.window').forEach(window => {
+                window.classList.remove('winning-window');
+                window.style.backgroundColor = '#87CEEB';
+                window.onclick = function() { checkWindow(parseInt(window.id.replace('window', ''))); };
+            });
+
+            // Resetta il risultato
+            document.getElementById('result').innerHTML = '';
+        }
+
+        function checkWindow(windowNumber) {
+            const selectedWindow = document.getElementById(`window${windowNumber}`);
+            const resultParagraph = document.getElementById('result');
+            
+            if (windowNumber === windowWithPhone) {
+                // Aggiunta della classe per il colore delle righe nella finestra vincente
+                selectedWindow.classList.add('winning-window');
+                resultParagraph.innerHTML = "Complimenti! Ora trova le <strong> spagnolette </strong>.";
+
+                // Aggiunta del testo "Le spagnole mature, viva le sfumature" in un paragrafo separato
+                resultParagraph.innerHTML += "<p>Le spagnole mature, viva le sfumature</p>";
+            } else {
+                // Mostra comunque la finestra corretta anche se quella selezionata è sbagliata
+                const correctWindow = document.getElementById(`window${windowWithPhone}`);
+                correctWindow.classList.add('winning-window');
+
+                selectedWindow.style.backgroundColor = "#696969"; // Colore di errore
+                resultParagraph.innerHTML = "Mi spiace! Le <strong> spagnolette </strong> non hanno trovato nulla. Prova di nuovo.";
+            }
+
+            // Disabilita la possibilità di cliccare su altre finestre dopo aver fatto la scelta
+            document.querySelectorAll('.window').forEach(window => window.onclick = null);
+        }
+
+        function restartGame() {
+            initializeGame(); // Inizia una nuova partita
+        }
+
+        // Inizializza il gioco al caricamento della pagina
+        window.onload = initializeGame;
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+</body>
+</html>
